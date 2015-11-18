@@ -1,7 +1,4 @@
-#-------------------------------------------------#
-# A class for creating and training a single softmax
-# layer using tensorflow.
-#-------------------------------------------------#
+# -*- coding: utf-8 -*-
 
 import tensorflow as tf
 
@@ -23,12 +20,17 @@ class Softmax(object):
         y = self.output()
         return self.sess.run(y, {self.x: [x]})
 
-    def train(self,iters, train_data, batch_size):
+    def train(self,iters, get_data):
+        """
+        @function: This is a method for training the neural network 
+        @params: iters is number of iterations;
+        @params: get_data is a function that returns a tuple of a data batch where (x_batch, y_batch). It is recommended for efficiency that get_data be a generative function.
+        """
         y = self.output()
         cross_entropy = -tf.reduce_sum(self.y_*tf.log(y))
         train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
         for _ in range(iters):
-            batch_xs, batch_ys = next_batch(train_data, batch_size)
+            batch_xs, batch_ys = get_data()
             self.sess.run(train_step,
                           feed_dict={self.x: batch_xs, self.y_: batch_ys})
         pass
@@ -41,11 +43,3 @@ class Softmax(object):
                         feed_dict={self.x: test_inputs, self.y_: target_outputs})
 
     pass
-
-# This function has to be defined according to how data is presented.
-def next_batch(data, batch_size):
-    """
-    This particular function was define for data presented by input_data.py from
-    tensorflow tutorials @ https://tensorflow.org/tutorial/mnist/tf/index.html
-    """
-    return data.next_batch(batch_size)
