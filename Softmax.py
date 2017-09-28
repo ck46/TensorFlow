@@ -2,7 +2,7 @@
 
 import tensorflow as tf
 
-class LogisticRegression(object):
+class Softmax(object):
     def __init__(self, n_in, n_out):
         self.x = tf.placeholder("float", [None, n_in])
         self.y_ = tf.placeholder("float", [None, n_out])
@@ -14,7 +14,7 @@ class LogisticRegression(object):
         self.sess.run(tf.initialize_all_variables())
 
     def output(self):
-        return tf.nn.sigmoid(tf.matmul(self.x,self.W) + self.b)
+        return tf.nn.softmax(tf.matmul(self.x,self.W) + self.b)
 
     def predict(self, x):
         y = self.output()
